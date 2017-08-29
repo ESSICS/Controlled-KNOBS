@@ -18,15 +18,61 @@ package se.ess.knobs.controlled;
 
 
 import java.util.logging.Logger;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import se.ess.knobs.Knob;
+import se.ess.knobs.controller.Controllable;
+
+import static se.ess.knobs.controller.Controllable.OperatingMode.CONTINUOUS;
 
 
 /**
  * @author Claudio Rosati, European Spallation Source ERIC
  * @version 1.0.0 23 Aug 2017
  */
-public class ControlledKnob extends Knob {
-
+public class ControlledKnob extends Knob implements Controllable {
+    
     private static final Logger LOGGER = Logger.getLogger(ControlledKnob.class.getName());
+
+    /*
+     * ---- highResolution -----------------------------------------------------
+     */
+    private final BooleanProperty highResolution = new SimpleBooleanProperty(this, "highResolution", false);
+
+    public BooleanProperty highResolutionProperty() {
+        return highResolution;
+    }
+
+    public boolean isHighResolution() {
+        return highResolution.get();
+    }
+
+    public void setHighResolution( boolean highResolution ) {
+        this.highResolution.set(highResolution);
+    }
+
+    /*
+     * ---- highResolution -----------------------------------------------------
+     */
+    private final ObjectProperty<OperatingMode> operatingMode = new SimpleObjectProperty<>(this, "operatingMode", CONTINUOUS);
+
+    @Override
+    public ObjectProperty<OperatingMode> operatingModeProperty() {
+        return operatingMode;
+    }
+
+    public OperatingMode getOperatingMode() {
+        return operatingMode.get();
+    }
+
+    public void setOperatingMode ( OperatingMode operatingMode ) {
+        this.operatingMode.set(operatingMode);
+    }
+
+    /*
+     * -------------------------------------------------------------------------
+     */
 
 }

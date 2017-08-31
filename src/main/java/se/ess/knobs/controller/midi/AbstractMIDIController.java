@@ -17,12 +17,7 @@
 package se.ess.knobs.controller.midi;
 
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import se.ess.knobs.controller.Controllable;
-import se.ess.knobs.controller.spi.Controller;
+import se.ess.knobs.controller.AbstractController;
 
 
 /**
@@ -31,10 +26,7 @@ import se.ess.knobs.controller.spi.Controller;
  * @author Claudio Rosati, European Spallation Source ERIC
  * @version 1.0.0 28 Aug 2017
  */
-public abstract class AbstractMIDIController implements Controller {
-
-    private final Map<Controllable, ControllableWrapper> controllableMap = Collections.synchronizedMap(new HashMap<>(16));
-    private final String identifier;
+public abstract class AbstractMIDIController extends AbstractController {
 
     /**
      * Create a new instance of this abstract controller.
@@ -42,53 +34,10 @@ public abstract class AbstractMIDIController implements Controller {
      * @param identifier The controller's unique identifier.
      */
     public AbstractMIDIController( String identifier ) {
-        this.identifier = identifier;
-    }
 
-    @Override
-    public void add( Controllable controllable ) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+        super(identifier);
 
-    @Override
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    @Override
-    public void remove( Controllable controllable ) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    protected Collection<ControllableWrapper> getWrappers() {
-        return Collections.unmodifiableCollection(controllableMap.values());
-    }
-
-    @SuppressWarnings( "ProtectedInnerClass" )
-    protected static class ControllableWrapper {
-
-        private final Controllable controllable;
-        private volatile double currentValue;
-
-        private ControllableWrapper( Controllable controllable ) {
-
-            this.controllable = controllable;
-
-            controllable.currentValueProperty().addListener(( observable, oldValue, newValue ) -> {
-                synchronized ( ControllableWrapper.this ) {
-                    currentValue = newValue.doubleValue();
-                }
-            });
-
-        }
-
-        public Controllable getControllable() {
-            return controllable;
-        }
-
-        public synchronized double getCurrentValue() {
-            return currentValue;
-        }
+        //  DORO: CR: acquire MIDI devices
 
     }
 

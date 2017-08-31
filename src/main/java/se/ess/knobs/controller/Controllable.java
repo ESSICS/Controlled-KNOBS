@@ -19,7 +19,10 @@ package se.ess.knobs.controller;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.ReadOnlyIntegerProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.scene.paint.Color;
 
 
@@ -59,47 +62,67 @@ public interface Controllable {
 
 
     /*
+     * ---- channel ------------------------------------------------------------
+     * The channel number of this controllable.
+     */
+    public ReadOnlyIntegerProperty channelProperty();
+
+    /*
+     * ---- coarseIncrement ----------------------------------------------------
+     * The value used to increment/decrement the target on when coarse movements
+     * of the physical device are performed {fineResolution is false).
+     */
+    public ReadOnlyDoubleProperty coarseIncrementProperty();
+
+    /*
      * ---- currentValue -------------------------------------------------------
      * The current value of this controllable. It should be displayed somehow in
      * the physical device.
      */
-    public DoubleProperty currentValueProperty();
+    public ReadOnlyDoubleProperty currentValueProperty();
 
     /*
-     * ---- disable ------------------------------------------------------------
+     * ---- disabled -----------------------------------------------------------
      * Tell the physical device that this controllable is disabled.
      */
-    public BooleanProperty disableProperty();
+    public ReadOnlyBooleanProperty disabledProperty();
 
     /*
-     * ---- highResolution -----------------------------------------------------
-     * Tell if the physical device is in hig-resolution mode or not.
+     * ---- fineIncrement ------------------------------------------------------
+     * The value used to increment/decrement the target on when fine movements
+     * of the physical device are performed {fineResolution is false).
      */
-    public BooleanProperty highResolutionProperty();
+    public DoubleProperty fineIncrementProperty();
+
+    /*
+     * ---- fineResolution -----------------------------------------------------
+     * Tell if the physical device is in fine-resolution mode or not.
+     */
+    public BooleanProperty fineResolutionProperty();
 
     /*
      * ---- maxValue -----------------------------------------------------------
      * The maximum amount of the current and target values.
      */
-    public DoubleProperty maxValueProperty();
+    public ReadOnlyDoubleProperty maxValueProperty();
 
     /*
      * ---- minValue -----------------------------------------------------------
      * The minimum amount of the current and target values.
      */
-    public DoubleProperty minValueProperty();
+    public ReadOnlyDoubleProperty minValueProperty();
 
     /*
      * ---- operatingMode ------------------------------------------------------
      * Tell this controller how target mode is set and validated.
      */
-    public ObjectProperty<OperatingMode> operatingModeProperty();
+    public ReadOnlyObjectProperty<OperatingMode> operatingModeProperty();
 
     /*
      * ---- tagColor -----------------------------------------------------------
      * The color identifying this controllable.
      */
-    public ObjectProperty<Color> tagColorProperty();
+    public ReadOnlyObjectProperty<Color> tagColorProperty();
 
     /*
      * ---- targetValue --------------------------------------------------------

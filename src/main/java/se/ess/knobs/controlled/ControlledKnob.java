@@ -17,10 +17,12 @@
 package se.ess.knobs.controlled;
 
 
-import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import se.ess.knobs.Knob;
 import se.ess.knobs.controller.Controllable;
@@ -32,31 +34,86 @@ import static se.ess.knobs.controller.Controllable.OperatingMode.CONTINUOUS;
  * @author Claudio Rosati, European Spallation Source ERIC
  * @version 1.0.0 23 Aug 2017
  */
+@SuppressWarnings( "ClassWithoutLogger" )
 public class ControlledKnob extends Knob implements Controllable {
     
-    private static final Logger LOGGER = Logger.getLogger(ControlledKnob.class.getName());
-
-    /*
-     * ---- highResolution -----------------------------------------------------
-     */
-    private final BooleanProperty highResolution = new SimpleBooleanProperty(this, "highResolution", false);
-
-    public BooleanProperty highResolutionProperty() {
-        return highResolution;
-    }
-
-    public boolean isHighResolution() {
-        return highResolution.get();
-    }
-
-    public void setHighResolution( boolean highResolution ) {
-        this.highResolution.set(highResolution);
+    public ControlledKnob() {
+        init();
     }
 
     /*
-     * ---- highResolution -----------------------------------------------------
+     * ---- channel ------------------------------------------------------------
      */
-    private final ObjectProperty<OperatingMode> operatingMode = new SimpleObjectProperty<>(this, "operatingMode", CONTINUOUS);
+    private final IntegerProperty channel = new SimpleIntegerProperty(this, "channel", 0);
+
+    @Override
+    public IntegerProperty channelProperty() {
+        return channel;
+    }
+
+    public int getChannel() {
+        return channel.get();
+    }
+
+    public void setChannel( int channel ) {
+        this.channel.set(channel);
+    }
+
+    /*
+     * ---- coarseIncrement ----------------------------------------------------
+     */
+    private final DoubleProperty coarseIncrement = new SimpleDoubleProperty(this, "coarseIncrement", 1);
+
+    @Override
+    public DoubleProperty coarseIncrementProperty() {
+        return coarseIncrement;
+    }
+
+    public double getCoarseIncrement() {
+        return coarseIncrement.get();
+    }
+
+    public void setCoarseIncrement( double coarseIncrement ) {
+        this.coarseIncrement.set(coarseIncrement);
+    }
+
+    /*
+     * ---- fineIncrement ------------------------------------------------------
+     */
+    private final DoubleProperty fineIncrement = new SimpleDoubleProperty(this, "fineIncrement", 0.05);
+
+    @Override
+    public DoubleProperty fineIncrementProperty() {
+        return fineIncrement;
+    }
+
+    public double getFineIncrement() {
+        return fineIncrement.get();
+    }
+
+    public void setFineIncrement( double fineIncrement ) {
+        this.fineIncrement.set(fineIncrement);
+    }
+
+    /*
+     * ---- fineResolution -----------------------------------------------------
+     */
+    @Override
+    public BooleanProperty fineResolutionProperty() {
+        return selectedProperty();
+    }
+
+    /*
+     * ---- operatingMode ------------------------------------------------------
+     */
+    private final ObjectProperty<OperatingMode> operatingMode = new SimpleObjectProperty<OperatingMode>(this, "operatingMode", CONTINUOUS) {
+        @Override
+        protected void invalidated() {
+            if ( get() == null ) {
+                set(CONTINUOUS);
+            }
+        }
+    };
 
     @Override
     public ObjectProperty<OperatingMode> operatingModeProperty() {
@@ -74,5 +131,8 @@ public class ControlledKnob extends Knob implements Controllable {
     /*
      * -------------------------------------------------------------------------
      */
+    private void init() {
+        setTagVisible(true);
+    }
 
 }

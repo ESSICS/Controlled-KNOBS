@@ -33,9 +33,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import se.ess.knobs.Knob;
 import se.ess.knobs.KnobEvent;
+import se.ess.knobs.controller.Controllable;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
+import static se.ess.knobs.controller.Controllable.OperatingMode.CLIC_SET_AND_RELEASE;
+import static se.ess.knobs.controller.Controllable.OperatingMode.CONTINUOUS;
 
 
 /**
@@ -87,12 +90,15 @@ public class ControlledKnobBuilderTest {
 
         ControlledKnob knob1 = ControlledKnobBuilder.create()
             .backgroundColor(Color.GOLDENROD)
+            .channel(2)
+            .coarseIncrement(12.23)
             .color(Color.CORAL)
             .currentValueAlwaysVisible(false)
             .currentValueColor(Color.GAINSBORO)
             .decimals(3)
             .dragDisabled(true)
             .extremaVisible(true)
+            .fineIncrement(24.46)
             .gradientStops((Stop) null)
             .id("pippo")
             .indicatorColor(Color.BLUEVIOLET)
@@ -102,6 +108,7 @@ public class ControlledKnobBuilderTest {
             .maxWidth(456.789)
             .minHeight(1.678)
             .minWidth(2.789)
+            .operatingMode(CLIC_SET_AND_RELEASE)
             .selected(true)
             .selectionColor(Color.PEACHPUFF)
             .tagColor(Color.NAVAJOWHITE)
@@ -117,6 +124,8 @@ public class ControlledKnobBuilderTest {
         assertThat(knob1)
             .isNotNull()
             .hasFieldOrPropertyWithValue("backgroundColor", Color.GOLDENROD)
+            .hasFieldOrPropertyWithValue("channel", 2)
+            .hasFieldOrPropertyWithValue("coarseIncrement", 12.23)
             .hasFieldOrPropertyWithValue("color", Color.CORAL)
             .hasFieldOrPropertyWithValue("currentValue", 23.456)
             .hasFieldOrPropertyWithValue("currentValueAlwaysVisible", false)
@@ -124,6 +133,7 @@ public class ControlledKnobBuilderTest {
             .hasFieldOrPropertyWithValue("decimals", 3)
             .hasFieldOrPropertyWithValue("dragDisabled", true)
             .hasFieldOrPropertyWithValue("extremaVisible", true)
+            .hasFieldOrPropertyWithValue("fineIncrement", 24.46)
             .hasFieldOrPropertyWithValue("gradientStops", FXCollections.observableArrayList((Stop) null))
             .hasFieldOrPropertyWithValue("indicatorColor", Color.BLUEVIOLET)
             .hasFieldOrPropertyWithValue("id", "pippo")
@@ -135,6 +145,7 @@ public class ControlledKnobBuilderTest {
             .hasFieldOrPropertyWithValue("minHeight", 1.678)
             .hasFieldOrPropertyWithValue("minValue", -100.0)
             .hasFieldOrPropertyWithValue("minWidth", 2.789)
+            .hasFieldOrPropertyWithValue("operatingMode", CLIC_SET_AND_RELEASE)
             .hasFieldOrPropertyWithValue("selected", true)
             .hasFieldOrPropertyWithValue("selectionColor", Color.PEACHPUFF)
             .hasFieldOrPropertyWithValue("tagColor", Color.NAVAJOWHITE)
@@ -145,6 +156,7 @@ public class ControlledKnobBuilderTest {
 
         ControlledKnob knob2 = ControlledKnobBuilder.create()
             .backgroundColor(null)
+            .channel(-12)
             .color(null)
             .currentValueAlwaysVisible(true)
             .currentValueColor(null)
@@ -158,6 +170,7 @@ public class ControlledKnobBuilderTest {
             .layoutY(-1)
             .maxSize(456.789, 345.678)
             .minSize(2.789, 1.678)
+            .operatingMode(null)
             .selected(false)
             .selectionColor(null)
             .tagColor(null)
@@ -173,6 +186,8 @@ public class ControlledKnobBuilderTest {
         assertThat(knob2)
             .isNotNull()
             .hasFieldOrPropertyWithValue("backgroundColor", Color.TRANSPARENT)
+            .hasFieldOrPropertyWithValue("channel", -12)
+            .hasFieldOrPropertyWithValue("coarseIncrement", 1.0)
             .hasFieldOrPropertyWithValue("color", Knob.DEFAULT_COLOR)
             .hasFieldOrPropertyWithValue("currentValue", 100.0)
             .hasFieldOrPropertyWithValue("currentValueAlwaysVisible", true)
@@ -180,6 +195,7 @@ public class ControlledKnobBuilderTest {
             .hasFieldOrPropertyWithValue("decimals", 6)
             .hasFieldOrPropertyWithValue("dragDisabled", false)
             .hasFieldOrPropertyWithValue("extremaVisible", false)
+            .hasFieldOrPropertyWithValue("fineIncrement", 0.05)
             .hasFieldOrPropertyWithValue("gradientStops", FXCollections.emptyObservableList())
             .hasFieldOrPropertyWithValue("id", null)
             .hasFieldOrPropertyWithValue("indicatorColor", Knob.DEFAULT_COLOR.darker())
@@ -191,6 +207,7 @@ public class ControlledKnobBuilderTest {
             .hasFieldOrPropertyWithValue("minHeight", 1.678)
             .hasFieldOrPropertyWithValue("minValue", -100.0)
             .hasFieldOrPropertyWithValue("minWidth", 2.789)
+            .hasFieldOrPropertyWithValue("operatingMode", CONTINUOUS)
             .hasFieldOrPropertyWithValue("selected", false)
             .hasFieldOrPropertyWithValue("selectionColor", Color.WHITE)
             .hasFieldOrPropertyWithValue("tagColor", Color.TRANSPARENT)
@@ -222,6 +239,8 @@ public class ControlledKnobBuilderTest {
         assertThat(knob3)
             .isNotNull()
             .hasFieldOrPropertyWithValue("backgroundColor", Color.TRANSPARENT)
+            .hasFieldOrPropertyWithValue("channel", 0)
+            .hasFieldOrPropertyWithValue("coarseIncrement", 1.0)
             .hasFieldOrPropertyWithValue("color", Knob.DEFAULT_COLOR)
             .hasFieldOrPropertyWithValue("currentValue", -100.0)
             .hasFieldOrPropertyWithValue("currentValueAlwaysVisible", true)
@@ -229,6 +248,7 @@ public class ControlledKnobBuilderTest {
             .hasFieldOrPropertyWithValue("decimals", 0)
             .hasFieldOrPropertyWithValue("dragDisabled", false)
             .hasFieldOrPropertyWithValue("extremaVisible", false)
+            .hasFieldOrPropertyWithValue("fineIncrement", 0.05)
             .hasFieldOrPropertyWithValue("gradientStops", FXCollections.observableList(stops))
             .hasFieldOrPropertyWithValue("id", null)
             .hasFieldOrPropertyWithValue("indicatorColor", Knob.DEFAULT_COLOR.darker())
@@ -240,13 +260,48 @@ public class ControlledKnobBuilderTest {
             .hasFieldOrPropertyWithValue("minHeight", Knob.MINIMUM_HEIGHT)
             .hasFieldOrPropertyWithValue("minValue", min)
             .hasFieldOrPropertyWithValue("minWidth", Knob.MINIMUM_WIDTH)
+            .hasFieldOrPropertyWithValue("operatingMode", CONTINUOUS)
             .hasFieldOrPropertyWithValue("selected", false)
             .hasFieldOrPropertyWithValue("selectionColor", Color.WHITE)
             .hasFieldOrPropertyWithValue("tagColor", Color.RED)
-            .hasFieldOrPropertyWithValue("tagVisible", false)
+            .hasFieldOrPropertyWithValue("tagVisible", true)
             .hasFieldOrPropertyWithValue("targetValue", -100.0)
             .hasFieldOrPropertyWithValue("textColor", Color.WHITE)
             .hasFieldOrPropertyWithValue("unit", (String) null);
+
+    }
+
+    /**
+     * Test of channl method, of class KnobBuilder.
+     */
+    @Test
+    public void testChannel() {
+
+        int value = 13;
+        ControlledKnobBuilder builder = ControlledKnobBuilder.create().channel(value);
+
+        assertThat(builder.properties)
+            .containsKey("channel");
+        assertThat(builder.properties.get("channel"))
+            .isExactlyInstanceOf(Integer.class)
+            .isEqualTo(value);
+
+    }
+
+    /**
+     * Test of coarseIncrement method, of class KnobBuilder.
+     */
+    @Test
+    public void testCoarseIncrement() {
+
+        double value = 135.246;
+        ControlledKnobBuilder builder = ControlledKnobBuilder.create().coarseIncrement(value);
+
+        assertThat(builder.properties)
+            .containsKey("coarseIncrement");
+        assertThat(builder.properties.get("coarseIncrement"))
+            .isExactlyInstanceOf(Double.class)
+            .isEqualTo(value);
 
     }
 
@@ -378,6 +433,23 @@ public class ControlledKnobBuilderTest {
             .containsKey("extremaVisible");
         assertThat(builder.properties.get("extremaVisible"))
             .isExactlyInstanceOf(Boolean.class)
+            .isEqualTo(value);
+
+    }
+
+    /**
+     * Test of fineIncrement method, of class KnobBuilder.
+     */
+    @Test
+    public void testFineIncrement() {
+
+        double value = 246.357;
+        ControlledKnobBuilder builder = ControlledKnobBuilder.create().fineIncrement(value);
+
+        assertThat(builder.properties)
+            .containsKey("fineIncrement");
+        assertThat(builder.properties.get("fineIncrement"))
+            .isExactlyInstanceOf(Double.class)
             .isEqualTo(value);
 
     }
@@ -689,6 +761,23 @@ public class ControlledKnobBuilderTest {
             .containsKey("opacity");
         assertThat(builder.properties.get("opacity"))
             .isExactlyInstanceOf(Double.class)
+            .isEqualTo(value);
+
+    }
+
+    /**
+     * Test of operatingMode method, of class KnobBuilder.
+     */
+    @Test
+    public void testOperatingMode() {
+
+        Controllable.OperatingMode value = CLIC_SET_AND_RELEASE;
+        ControlledKnobBuilder builder = ControlledKnobBuilder.create().operatingMode(value);
+
+        assertThat(builder.properties)
+            .containsKey("operatingMode");
+        assertThat(builder.properties.get("operatingMode"))
+            .isExactlyInstanceOf(Controllable.OperatingMode.class)
             .isEqualTo(value);
 
     }

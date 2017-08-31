@@ -18,6 +18,8 @@ package se.ess.knobs.controller.midi.djtechtools;
 
 
 import java.util.logging.Logger;
+import javafx.scene.paint.Color;
+import se.ess.knobs.controller.Controllable;
 import se.ess.knobs.controller.midi.AbstractMIDIController;
 import se.ess.knobs.controller.spi.Controller;
 
@@ -36,6 +38,59 @@ public class MidiFighterTwisterController extends AbstractMIDIController {
 
     public MidiFighterTwisterController() {
         super(IDENTIFIER);
+    }
+
+    @Override
+    protected AbstractControllableWrapper createWrapper( Controllable controllable ) {
+        return new MFTControllableWrapper(controllable);
+    }
+
+    private static class MFTControllableWrapper extends AbstractControllableWrapper {
+
+        MFTControllableWrapper ( Controllable controllable ) {
+            super(controllable);
+        }
+
+        @Override
+        protected void channelChanged( int oldValue, int newValue ) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        protected void currentValueChanged( double oldValue, double newValue ) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        protected void disabledChanged( boolean oldValue, boolean newValue ) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        protected void maxValueChanged( double oldValue, double newValue ) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        protected void minValueChanged( double oldValue, double newValue ) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        protected void operatingModeChanged( Controllable.OperatingMode oldValue, Controllable.OperatingMode newValue ) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        protected void tagColorChanged( Color oldValue, Color newValue ) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        protected void targetValueChanged( double oldValue, double newValue ) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
     }
 
 }

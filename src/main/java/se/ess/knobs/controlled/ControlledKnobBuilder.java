@@ -27,6 +27,7 @@ import javafx.geometry.Insets;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Stop;
 import se.ess.knobs.KnobEvent;
+import se.ess.knobs.controller.Controllable;
 
 
 /**
@@ -73,6 +74,12 @@ public class ControlledKnobBuilder {
         if ( properties.containsKey("backgroundColor") ) {
             knob.setBackgroundColor((Color) properties.get("backgroundColor"));
         }
+        if ( properties.containsKey("channel") ) {
+            knob.setChannel((int) properties.get("channel"));
+        }
+        if ( properties.containsKey("coarseIncrement") ) {
+            knob.setCoarseIncrement((double) properties.get("coarseIncrement"));
+        }
         if ( properties.containsKey("color") ) {
             knob.setColor((Color) properties.get("color"));
         }
@@ -90,6 +97,9 @@ public class ControlledKnobBuilder {
         }
         if ( properties.containsKey("extremaVisible") ) {
             knob.setExtremaVisible((boolean) properties.get("extremaVisible"));
+        }
+        if ( properties.containsKey("fineIncrement") ) {
+            knob.setFineIncrement((double) properties.get("fineIncrement"));
         }
         if ( properties.containsKey("gradientStops") ) {
             knob.setGradientStops((List<Stop>) properties.get("gradientStops"));
@@ -143,6 +153,9 @@ public class ControlledKnobBuilder {
         }
         if ( properties.containsKey("opacity") ) {
             knob.setOpacity((double) properties.get("opacity"));
+        }
+        if ( properties.containsKey("operatingMode") ) {
+            knob.setOperatingMode((Controllable.OperatingMode) properties.get("operatingMode"));
         }
         if ( properties.containsKey("padding") ) {
             knob.setPadding((Insets) properties.get("padding"));
@@ -198,6 +211,22 @@ public class ControlledKnobBuilder {
 
     }
 
+    public final ControlledKnobBuilder channel( final int channel ) {
+
+        properties.put("channel", channel);
+
+        return this;
+
+    }
+
+    public final ControlledKnobBuilder coarseIncrement( final double value ) {
+
+        properties.put("coarseIncrement", value);
+
+        return this;
+
+    }
+
     public final ControlledKnobBuilder color( final Color color ) {
 
         properties.put("color", color);
@@ -249,6 +278,14 @@ public class ControlledKnobBuilder {
     public final ControlledKnobBuilder extremaVisible( final boolean value ) {
 
         properties.put("extremaVisible", value);
+
+        return this;
+
+    }
+
+    public final ControlledKnobBuilder fineIncrement( final double value ) {
+
+        properties.put("fineIncrement", value);
 
         return this;
 
@@ -389,6 +426,14 @@ public class ControlledKnobBuilder {
     public final ControlledKnobBuilder opacity( final double opacity ) {
 
         properties.put("opacity", opacity);
+
+        return this;
+
+    }
+
+    public final ControlledKnobBuilder operatingMode( final Controllable.OperatingMode operatingMode ) {
+
+        properties.put("operatingMode", operatingMode);
 
         return this;
 

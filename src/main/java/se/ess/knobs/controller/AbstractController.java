@@ -17,8 +17,10 @@
 package se.ess.knobs.controller;
 
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executor;
@@ -41,7 +43,6 @@ public abstract class AbstractController implements Controller {
 
     private final Map<Controllable, AbstractControllableWrapper> controllableMap = Collections.synchronizedMap(new HashMap<>(16));
     private final String identifier;
-    private final Map<AbstractControllableWrapper, Controllable> wrappersMap = Collections.synchronizedMap(new HashMap<>(16));
 
     /**
      * Create a new instance of this abstract controller.
@@ -54,7 +55,16 @@ public abstract class AbstractController implements Controller {
 
     @Override
     public void add( Controllable controllable ) {
-throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        controllableMap.put(controllable, createWrapper(controllable));
+    }
+
+    @Override
+    public void dispose() {
+
+        Set<Controllable> controllables = new HashSet<>(getControllables());
+
+        controllables.stream().forEach(c -> remove(c));
+
     }
 
     @Override
@@ -64,7 +74,7 @@ throw new UnsupportedOperationException("Not supported yet."); //To change body 
 
     @Override
     public void remove( Controllable controllable ) {
-throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        controllableMap.remove(controllable).dispose();
     }
 
     /**
@@ -76,8 +86,12 @@ throw new UnsupportedOperationException("Not supported yet."); //To change body 
      */
     protected abstract AbstractControllableWrapper createWrapper( Controllable controllable );
 
-    protected Set<AbstractControllableWrapper> getWrappers() {
-        return Collections.unmodifiableSet(wrappersMap.keySet());
+    protected Set<Controllable> getControllables() {
+        return Collections.unmodifiableSet(controllableMap.keySet());
+    }
+
+    protected Collection<AbstractControllableWrapper> getWrappers() {
+        return Collections.unmodifiableCollection(controllableMap.values());
     }
 
     @SuppressWarnings( "ProtectedInnerClass" )
@@ -126,6 +140,16 @@ throw new UnsupportedOperationException("Not supported yet."); //To change body 
 
         public double getCoarseIncrement() {
             return coarseIncrement;
+        }
+
+
+        /*
+         * ---- coarseIncrement ------------------------------------------------
+         */
+        private final AbstractController controller;
+
+        protected AbstractController getController() {
+            return controller;
         }
 
 
@@ -326,9 +350,10 @@ throw new UnsupportedOperationException("Not supported yet."); //To change body 
         /*
          * ---------------------------------------------------------------------
          */
-        protected AbstractControllableWrapper( Controllable controllable ) {
+        protected AbstractControllableWrapper( Controllable controllable, AbstractController controller ) {
 
             this.controllable = controllable;
+            this.controller = controller;
 
             init();
 
@@ -340,7 +365,6 @@ throw new UnsupportedOperationException("Not supported yet."); //To change body 
          * <P>
          * <B>Note:</B> always call {@code super.dispose()}.
          */
-        @SuppressWarnings( "NoopMethodInAbstractClass" )
         protected void dispose() {
             controllable.targetValueProperty().removeListener(targetValueListener);
             controllable.tagColorProperty().removeListener(tagColorListener);

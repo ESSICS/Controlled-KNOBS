@@ -26,6 +26,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import se.ess.knobs.Knob;
 import se.ess.knobs.controller.Controllable;
+import se.ess.knobs.controller.Controllers;
 
 import static se.ess.knobs.controller.Controllable.OperatingMode.CONTINUOUS;
 
@@ -133,6 +134,7 @@ public class ControlledKnob extends Knob implements Controllable {
      */
     private void init() {
         setTagVisible(true);
+        Controllers.get().getControllers().iterator().next().add(this);
     }
 
 }

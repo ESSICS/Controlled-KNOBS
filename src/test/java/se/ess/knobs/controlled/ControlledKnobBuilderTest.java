@@ -30,6 +30,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.ess.knobs.Knob;
 import se.ess.knobs.KnobEvent;
@@ -85,6 +86,7 @@ public class ControlledKnobBuilderTest {
     /**
      * Test of build method, of class KnobBuilder.
      */
+    @Ignore("Requires the JavaFX Toolkit being initialized.")
     @Test
     public void testBuild() {
 
@@ -272,7 +274,7 @@ public class ControlledKnobBuilderTest {
     }
 
     /**
-     * Test of channl method, of class KnobBuilder.
+     * Test of channel method, of class KnobBuilder.
      */
     @Test
     public void testChannel() {

@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import se.ess.knobs.controller.spi.Controller;
 
@@ -44,24 +45,35 @@ public class Controllers {
 
     private Controllers() {
 
-        ServiceLoader<Controller> loader = ServiceLoader.load(Controller.class);
+        try {
 
-        for ( Controller c : loader ) {
+            ServiceLoader<Controller> loader = ServiceLoader.load(Controller.class);
 
-            String id = c.getIdentifier();
+            for ( Controller c : loader ) {
 
-            if ( id != null && !id.isEmpty() ) {
-                if ( !CONTROLLERS.containsKey(id) ) {
-                    CONTROLLERS.put(id, c);
-                } else {
-                    LOGGER.warning(MessageFormat.format(
-                        "Controller \"{0}\" already exists.\n{1} implementation is skipped",
-                        id,
-                        c.getClass().getName()
-                    ));
+                String id = c.getIdentifier();
+
+                if ( id != null && !id.isEmpty() ) {
+
+                    if ( !CONTROLLERS.containsKey(id) ) {
+                        CONTROLLERS.put(id, c);
+                    } else {
+                        LOGGER.warning(MessageFormat.format(
+                            "Controller \"{0}\" already exists.\n{1} implementation is skipped",
+                            id,
+                            c.getClass().getName()
+                        ));
+                    }
+
+                    LOGGER.info(MessageFormat.format("Resetting controller \"{0}\"…", id));
+                    c.reset();
+
                 }
+
             }
 
+        } catch ( Throwable ex ) {
+            LOGGER.log(Level.SEVERE, "Unable to load controllers.", ex);
         }
 
     }

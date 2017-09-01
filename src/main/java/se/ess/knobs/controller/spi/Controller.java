@@ -36,6 +36,13 @@ public interface Controller {
     public void add( Controllable controllable );
 
     /**
+     * Called to perform specific resource disposal.
+     * <P>
+     * <B>Note:</B> always call {@code super.dispose()}.
+     */
+    public void dispose();
+
+    /**
      * @return The unique identifier of this controller.
      */
     public String getIdentifier();
@@ -46,5 +53,10 @@ public interface Controller {
      * @param controllable The object controlled by this controller.
      */
     public void remove( Controllable controllable );
+
+    /**
+     * Put the controller in its initial, well-known state.
+     */
+    public void reset();
 
 }

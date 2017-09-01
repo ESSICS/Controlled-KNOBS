@@ -51,6 +51,7 @@ import org.controlsfx.control.PropertySheet;
 import org.controlsfx.property.BeanProperty;
 import se.ess.knobs.Knob;
 import se.ess.knobs.KnobPropertyEditorFactory;
+import se.ess.knobs.controller.Controllers;
 
 
 /**
@@ -83,6 +84,9 @@ public class ControlledKnobController implements Initializable {
 
     @Override
     public void initialize( URL location, ResourceBundle resources ) {
+
+        //  Get the MIDI device.
+        Controllers.get();
 
         propertySheet.setPropertyEditorFactory(new KnobPropertyEditorFactory());
 

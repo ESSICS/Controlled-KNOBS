@@ -19,6 +19,8 @@ package se.ess.knobs.controller.midi.djtechtools;
 
 import java.util.logging.Logger;
 import javafx.scene.paint.Color;
+import javax.sound.midi.MidiMessage;
+import javax.sound.midi.ShortMessage;
 import se.ess.knobs.controller.Controllable;
 import se.ess.knobs.controller.midi.AbstractMIDIController;
 import se.ess.knobs.controller.spi.Controller;
@@ -34,6 +36,8 @@ public class MidiFighterTwisterController extends AbstractMIDIController {
 
     public static final String IDENTIFIER = "Midi Fighter Twister";
 
+    private static final int CHANNELS = 64;
+
     private static final Logger LOGGER = Logger.getLogger(MidiFighterTwisterController.class.getName());
 
     public MidiFighterTwisterController() {
@@ -41,54 +45,101 @@ public class MidiFighterTwisterController extends AbstractMIDIController {
     }
 
     @Override
+    public void reset() {
+
+        super.reset();
+
+        for ( int c = 0; c < CHANNELS; c++ ) {
+            for ( int v = 127; v >= 0; v-- ) {
+                send(ShortMessage.CONTROL_CHANGE, 0, c, v, -1);
+                send(ShortMessage.CONTROL_CHANGE, 1, c, v, -1);
+            }
+        }
+
+    }
+
+    @Override
     protected AbstractControllableWrapper createWrapper( Controllable controllable ) {
-        return new MFTControllableWrapper(controllable);
+        return new MFTControllableWrapper(controllable, this);
+    }
+
+    @Override
+    protected void midiMessageReceived( MidiMessage message, long timeStamp ) {
+//  TODO: CR: TBD
     }
 
     private static class MFTControllableWrapper extends AbstractControllableWrapper {
 
-        MFTControllableWrapper ( Controllable controllable ) {
-            super(controllable);
+        MFTControllableWrapper ( Controllable controllable, MidiFighterTwisterController controller ) {
+            super(controllable, controller);
+            initChannel();
         }
 
         @Override
         protected void channelChanged( int oldValue, int newValue ) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//  TODO: CR: TBD
         }
 
         @Override
         protected void currentValueChanged( double oldValue, double newValue ) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+System.out.println("*** currentValueChanged");
+            getMFTController().send(ShortMessage.CONTROL_CHANGE, 0, getChannel(), midiValue(newValue), -1);
         }
 
         @Override
         protected void disabledChanged( boolean oldValue, boolean newValue ) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//  TODO: CR: TBD
+        }
+
+        @Override
+        protected void dispose() {
+            super.dispose();
+            resetChannel();
         }
 
         @Override
         protected void maxValueChanged( double oldValue, double newValue ) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//  TODO: CR: TBD
         }
 
         @Override
         protected void minValueChanged( double oldValue, double newValue ) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//  TODO: CR: TBD
         }
 
         @Override
         protected void operatingModeChanged( Controllable.OperatingMode oldValue, Controllable.OperatingMode newValue ) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//  TODO: CR: TBD
         }
 
         @Override
         protected void tagColorChanged( Color oldValue, Color newValue ) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//  TODO: CR: TBD
         }
 
         @Override
         protected void targetValueChanged( double oldValue, double newValue ) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//  TODO: CR: TBD
+        }
+
+        private MidiFighterTwisterController getMFTController() {
+            return (MidiFighterTwisterController) getController();
+        }
+
+        private void initChannel() {
+            getMFTController().send(ShortMessage.CONTROL_CHANGE, 0, getChannel(), midiValue(getCurrentValue()), -1);
+        }
+
+        private int midiValue ( double value ) {
+
+            double min = getMinValue();
+            double max = getMaxValue();
+
+            return (int) Math.round(127.0 * ( value - min ) / ( max - min ));
+
+        }
+
+        private void resetChannel() {
         }
 
     }

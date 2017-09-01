@@ -24,6 +24,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import se.ess.knobs.controller.Controllers;
 
 
 /**
@@ -63,6 +64,7 @@ public class ControlledKnobEvaluator extends Application implements Initializabl
 
     @Override
     public void stop() throws Exception {
+        Controllers.get().getControllers().stream().forEach(c -> c.dispose());
         System.exit(0);
     }
 

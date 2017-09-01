@@ -350,7 +350,7 @@ public abstract class AbstractController implements Controller {
 
         public void setTargetValue( double targetValue ) {
 
-            this.targetValue = targetValue;
+            this.targetValue = clamp(targetValue, getMinValue(), getMaxValue());
 
             Platform.runLater(() -> controllable.targetValueProperty().set(this.targetValue));
 
@@ -394,6 +394,26 @@ public abstract class AbstractController implements Controller {
             controllable.currentValueProperty().removeListener(currentValueListener);
             controllable.coarseIncrementProperty().removeListener(coarseIncrementListener);
             controllable.channelProperty().removeListener(channelListener);
+        }
+
+        /**
+         * Clamp the given {@code value} inside a range defined by the given minimum
+         * and maximum values.
+         *
+         * @param value The value to be clamped.
+         * @param min   The clamp range minimum value.
+         * @param max   The clamp range maximum value.
+         * @return {@code value} if it's inside the range, otherwise {@code min} if
+         *         {@code value} is below the range, or {@code max} if above the range.
+         */
+        private double clamp ( final double value, final double min, final double max ) {
+            if ( value < min ) {
+                return min;
+            } else if ( value > max ) {
+                return max;
+            } else {
+                return value;
+            }
         }
 
         private void init() {

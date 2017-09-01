@@ -44,7 +44,7 @@ import static se.ess.knobs.controller.Controllable.OperatingMode.CONTINUOUS;
 public class ControlledKnob extends Knob implements Controllable {
 
     public static final String CONTROLLER_NONE = "NONE";
-    public static final Color DEFAULT_CURRENT_VALUE_COLOR = Color.WHITE.deriveColor(0, 1, 1, 0.75);
+    public static final Color DEFAULT_CURRENT_VALUE_COLOR = Color.WHITE.deriveColor(0, 1, 1, 0.95);
 
     public ControlledKnob() {
         init();

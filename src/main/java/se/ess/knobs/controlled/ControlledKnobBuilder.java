@@ -188,9 +188,6 @@ public class ControlledKnobBuilder {
         if ( properties.containsKey("tagColor") ) {
             knob.setTagColor((Color) properties.get("tagColor"));
         }
-        if ( properties.containsKey("tagVisible") ) {
-            knob.setTagVisible((boolean) properties.get("tagVisible"));
-        }
         if ( properties.containsKey("targetValue") ) {
             knob.setTargetValue((double) properties.get("targetValue"));
         }
@@ -205,6 +202,11 @@ public class ControlledKnobBuilder {
         }
         if ( properties.containsKey("unit") ) {
             knob.setUnit((String) properties.get("unit"));
+        }
+
+        //  The following must be the last one(s).
+        if ( properties.containsKey("controller") ) {
+            knob.setController((String) properties.get("controller"));
         }
 
         return knob;
@@ -230,6 +232,14 @@ public class ControlledKnobBuilder {
     public final ControlledKnobBuilder color( final Color color ) {
 
         properties.put("color", color);
+
+        return this;
+
+    }
+
+    public final ControlledKnobBuilder controller( final String controller ) {
+
+        properties.put("controller", controller);
 
         return this;
 
@@ -514,14 +524,6 @@ public class ControlledKnobBuilder {
     public final ControlledKnobBuilder tagColor( final Color color ) {
 
         properties.put("tagColor", color);
-
-        return this;
-
-    }
-
-    public final ControlledKnobBuilder tagVisible( final boolean value ) {
-
-        properties.put("tagVisible", value);
 
         return this;
 

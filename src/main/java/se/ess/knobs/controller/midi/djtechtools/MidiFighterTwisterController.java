@@ -77,18 +77,18 @@ public class MidiFighterTwisterController extends AbstractMIDIController {
 
         @Override
         protected void channelChanged( int oldValue, int newValue ) {
-//  TODO: CR: TBD
+            resetChannel(oldValue);
+            getMFTController().send(ShortMessage.CONTROL_CHANGE, 0, newValue, midiValue(getCurrentValue()), -1);
         }
 
         @Override
         protected void currentValueChanged( double oldValue, double newValue ) {
-System.out.println("*** currentValueChanged");
             getMFTController().send(ShortMessage.CONTROL_CHANGE, 0, getChannel(), midiValue(newValue), -1);
         }
 
         @Override
         protected void disabledChanged( boolean oldValue, boolean newValue ) {
-//  TODO: CR: TBD
+            //  Nothing to be done.
         }
 
         @Override
@@ -99,27 +99,40 @@ System.out.println("*** currentValueChanged");
 
         @Override
         protected void maxValueChanged( double oldValue, double newValue ) {
-//  TODO: CR: TBD
+            getMFTController().send(ShortMessage.CONTROL_CHANGE, 0, getChannel(), midiValue(getCurrentValue()), -1);
         }
 
         @Override
         protected void minValueChanged( double oldValue, double newValue ) {
-//  TODO: CR: TBD
+            getMFTController().send(ShortMessage.CONTROL_CHANGE, 0, getChannel(), midiValue(getCurrentValue()), -1);
         }
 
         @Override
         protected void operatingModeChanged( Controllable.OperatingMode oldValue, Controllable.OperatingMode newValue ) {
-//  TODO: CR: TBD
+            //  Nothing to be done.
         }
 
         @Override
         protected void tagColorChanged( Color oldValue, Color newValue ) {
-//  TODO: CR: TBD
+
+            double hue = newValue.getHue();
+            double mftHue = 360.0 + ( ( 360.0 - hue ) - 120.0 );
+            int mftHueInteger = (int) mftHue;
+            double mftHueResidual = mftHue - mftHueInteger;
+            
+            mftHueInteger %= 360;
+            
+            int midiValue = 1 + (int) Math.round( 125 * ( mftHueInteger + mftHueResidual ) / 360.0);
+
+            getMFTController().send(ShortMessage.CONTROL_CHANGE, 1, getChannel(), midiValue, -1);
+
+            setTagColor(Color.hsb(hue, 1.0, 1.0));
+
         }
 
         @Override
         protected void targetValueChanged( double oldValue, double newValue ) {
-//  TODO: CR: TBD
+            //  Nothing to be done.
         }
 
         private MidiFighterTwisterController getMFTController() {
@@ -127,7 +140,8 @@ System.out.println("*** currentValueChanged");
         }
 
         private void initChannel() {
-            getMFTController().send(ShortMessage.CONTROL_CHANGE, 0, getChannel(), midiValue(getCurrentValue()), -1);
+            currentValueChanged(0, getCurrentValue());
+            tagColorChanged(Color.BLACK, getTagColor());
         }
 
         private int midiValue ( double value ) {
@@ -140,6 +154,12 @@ System.out.println("*** currentValueChanged");
         }
 
         private void resetChannel() {
+            resetChannel(getChannel());
+        }
+
+        private void resetChannel( int channel ) {
+            getMFTController().send(ShortMessage.CONTROL_CHANGE, 0, channel, 0, -1);
+            getMFTController().send(ShortMessage.CONTROL_CHANGE, 1, channel, 0, -1);
         }
 
     }

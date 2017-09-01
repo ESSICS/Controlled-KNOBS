@@ -298,14 +298,32 @@ public abstract class AbstractController implements Controller {
         /*
          * ---- tagColor -------------------------------------------------------
          */
+        private volatile boolean updatingTegColor = false;
         private volatile Color tagColor;
         private final ChangeListener<? super Color> tagColorListener = ( observable, oldValue, newValue ) -> {
+
             tagColor = newValue;
-            EXECUTOR.execute(() -> tagColorChanged(oldValue, tagColor));
+
+            if ( ! updatingTegColor ) {
+                EXECUTOR.execute(() -> tagColorChanged(oldValue, tagColor));
+            }
+
         };
 
         public Color getTagColor() {
             return tagColor;
+        }
+
+        public void setTagColor( Color tagColor ) {
+
+            this.updatingTegColor = true;
+            this.tagColor = tagColor;
+
+            Platform.runLater(() -> {
+                controllable.tagColorProperty().set(this.tagColor);
+                updatingTegColor = false;
+            });
+
         }
 
         /**

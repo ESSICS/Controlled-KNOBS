@@ -19,6 +19,7 @@ package se.ess.knobs.controller;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
@@ -122,7 +123,7 @@ public interface Controllable {
      * ---- tagColor -----------------------------------------------------------
      * The color identifying this controllable.
      */
-    public ReadOnlyObjectProperty<Color> tagColorProperty();
+    public ObjectProperty<Color> tagColorProperty();
 
     /*
      * ---- targetValue --------------------------------------------------------

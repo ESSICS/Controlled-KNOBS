@@ -30,11 +30,11 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.ess.knobs.Knob;
 import se.ess.knobs.KnobEvent;
 import se.ess.knobs.controller.Controllable;
+import se.ess.knobs.controller.midi.djtechtools.MidiFighterTwisterController;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
@@ -86,7 +86,6 @@ public class ControlledKnobBuilderTest {
     /**
      * Test of build method, of class KnobBuilder.
      */
-    @Ignore("Requires the JavaFX Toolkit being initialized.")
     @Test
     public void testBuild() {
 
@@ -95,6 +94,7 @@ public class ControlledKnobBuilderTest {
             .channel(2)
             .coarseIncrement(12.23)
             .color(Color.CORAL)
+            .controller(MidiFighterTwisterController.IDENTIFIER)
             .currentValueAlwaysVisible(false)
             .currentValueColor(Color.GAINSBORO)
             .decimals(3)
@@ -114,7 +114,6 @@ public class ControlledKnobBuilderTest {
             .selected(true)
             .selectionColor(Color.PEACHPUFF)
             .tagColor(Color.NAVAJOWHITE)
-            .tagVisible(true)
             .textColor(Color.SLATEGREY)
             .unit("dB")
             .minValue(-100)
@@ -129,6 +128,7 @@ public class ControlledKnobBuilderTest {
             .hasFieldOrPropertyWithValue("channel", 2)
             .hasFieldOrPropertyWithValue("coarseIncrement", 12.23)
             .hasFieldOrPropertyWithValue("color", Color.CORAL)
+            .hasFieldOrPropertyWithValue("controller", MidiFighterTwisterController.IDENTIFIER)
             .hasFieldOrPropertyWithValue("currentValue", 23.456)
             .hasFieldOrPropertyWithValue("currentValueAlwaysVisible", false)
             .hasFieldOrPropertyWithValue("currentValueColor", Color.GAINSBORO)
@@ -151,7 +151,6 @@ public class ControlledKnobBuilderTest {
             .hasFieldOrPropertyWithValue("selected", true)
             .hasFieldOrPropertyWithValue("selectionColor", Color.PEACHPUFF)
             .hasFieldOrPropertyWithValue("tagColor", Color.NAVAJOWHITE)
-            .hasFieldOrPropertyWithValue("tagVisible", true)
             .hasFieldOrPropertyWithValue("targetValue", 34.567)
             .hasFieldOrPropertyWithValue("textColor", Color.SLATEGREY)
             .hasFieldOrPropertyWithValue("unit", "dB");
@@ -160,6 +159,7 @@ public class ControlledKnobBuilderTest {
             .backgroundColor(null)
             .channel(-12)
             .color(null)
+            .controller(null)
             .currentValueAlwaysVisible(true)
             .currentValueColor(null)
             .decimals(80)
@@ -176,7 +176,6 @@ public class ControlledKnobBuilderTest {
             .selected(false)
             .selectionColor(null)
             .tagColor(null)
-            .tagVisible(false)
             .textColor(null)
             .unit(null)
             .minValue(-100)
@@ -190,7 +189,8 @@ public class ControlledKnobBuilderTest {
             .hasFieldOrPropertyWithValue("backgroundColor", Color.TRANSPARENT)
             .hasFieldOrPropertyWithValue("channel", -12)
             .hasFieldOrPropertyWithValue("coarseIncrement", 1.0)
-            .hasFieldOrPropertyWithValue("color", Knob.DEFAULT_COLOR)
+            .hasFieldOrPropertyWithValue("color", ControlledKnob.DEFAULT_COLOR)
+            .hasFieldOrPropertyWithValue("controller", ControlledKnob.CONTROLLER_NONE)
             .hasFieldOrPropertyWithValue("currentValue", 100.0)
             .hasFieldOrPropertyWithValue("currentValueAlwaysVisible", true)
             .hasFieldOrPropertyWithValue("currentValueColor", Knob.DEFAULT_CURRENT_VALUE_COLOR)
@@ -200,7 +200,7 @@ public class ControlledKnobBuilderTest {
             .hasFieldOrPropertyWithValue("fineIncrement", 0.05)
             .hasFieldOrPropertyWithValue("gradientStops", FXCollections.emptyObservableList())
             .hasFieldOrPropertyWithValue("id", null)
-            .hasFieldOrPropertyWithValue("indicatorColor", Knob.DEFAULT_COLOR.darker())
+            .hasFieldOrPropertyWithValue("indicatorColor", ControlledKnob.DEFAULT_COLOR.darker())
             .hasFieldOrPropertyWithValue("layoutX", -1.0)
             .hasFieldOrPropertyWithValue("layoutY", -1.0)
             .hasFieldOrPropertyWithValue("maxHeight", 345.678)
@@ -213,7 +213,6 @@ public class ControlledKnobBuilderTest {
             .hasFieldOrPropertyWithValue("selected", false)
             .hasFieldOrPropertyWithValue("selectionColor", Color.WHITE)
             .hasFieldOrPropertyWithValue("tagColor", Color.TRANSPARENT)
-            .hasFieldOrPropertyWithValue("tagVisible", false)
             .hasFieldOrPropertyWithValue("targetValue", 100.0)
             .hasFieldOrPropertyWithValue("textColor", Color.WHITE)
             .hasFieldOrPropertyWithValue("unit", (String) null);
@@ -230,6 +229,7 @@ public class ControlledKnobBuilderTest {
         );
         ControlledKnob knob3 = ControlledKnobBuilder.create()
             .backgroundColor(Color.TRANSPARENT)
+            .controller("pippo")
             .decimals(-3)
             .gradientStops(stops)
             .minValue(min)
@@ -243,30 +243,30 @@ public class ControlledKnobBuilderTest {
             .hasFieldOrPropertyWithValue("backgroundColor", Color.TRANSPARENT)
             .hasFieldOrPropertyWithValue("channel", 0)
             .hasFieldOrPropertyWithValue("coarseIncrement", 1.0)
-            .hasFieldOrPropertyWithValue("color", Knob.DEFAULT_COLOR)
+            .hasFieldOrPropertyWithValue("color", ControlledKnob.DEFAULT_COLOR)
+            .hasFieldOrPropertyWithValue("controller", ControlledKnob.CONTROLLER_NONE)
             .hasFieldOrPropertyWithValue("currentValue", -100.0)
             .hasFieldOrPropertyWithValue("currentValueAlwaysVisible", true)
-            .hasFieldOrPropertyWithValue("currentValueColor", Knob.DEFAULT_CURRENT_VALUE_COLOR)
+            .hasFieldOrPropertyWithValue("currentValueColor", ControlledKnob.DEFAULT_CURRENT_VALUE_COLOR)
             .hasFieldOrPropertyWithValue("decimals", 0)
             .hasFieldOrPropertyWithValue("dragDisabled", false)
             .hasFieldOrPropertyWithValue("extremaVisible", false)
             .hasFieldOrPropertyWithValue("fineIncrement", 0.05)
             .hasFieldOrPropertyWithValue("gradientStops", FXCollections.observableList(stops))
             .hasFieldOrPropertyWithValue("id", null)
-            .hasFieldOrPropertyWithValue("indicatorColor", Knob.DEFAULT_COLOR.darker())
+            .hasFieldOrPropertyWithValue("indicatorColor", ControlledKnob.DEFAULT_COLOR.darker())
             .hasFieldOrPropertyWithValue("layoutX", 0.0)
             .hasFieldOrPropertyWithValue("layoutY", 0.0)
-            .hasFieldOrPropertyWithValue("maxHeight", Knob.MAXIMUM_HEIGHT)
+            .hasFieldOrPropertyWithValue("maxHeight", ControlledKnob.MAXIMUM_HEIGHT)
             .hasFieldOrPropertyWithValue("maxValue", max)
-            .hasFieldOrPropertyWithValue("maxWidth", Knob.MAXIMUM_WIDTH)
-            .hasFieldOrPropertyWithValue("minHeight", Knob.MINIMUM_HEIGHT)
+            .hasFieldOrPropertyWithValue("maxWidth", ControlledKnob.MAXIMUM_WIDTH)
+            .hasFieldOrPropertyWithValue("minHeight", ControlledKnob.MINIMUM_HEIGHT)
             .hasFieldOrPropertyWithValue("minValue", min)
-            .hasFieldOrPropertyWithValue("minWidth", Knob.MINIMUM_WIDTH)
+            .hasFieldOrPropertyWithValue("minWidth", ControlledKnob.MINIMUM_WIDTH)
             .hasFieldOrPropertyWithValue("operatingMode", CONTINUOUS)
             .hasFieldOrPropertyWithValue("selected", false)
             .hasFieldOrPropertyWithValue("selectionColor", Color.WHITE)
             .hasFieldOrPropertyWithValue("tagColor", Color.RED)
-            .hasFieldOrPropertyWithValue("tagVisible", true)
             .hasFieldOrPropertyWithValue("targetValue", -100.0)
             .hasFieldOrPropertyWithValue("textColor", Color.WHITE)
             .hasFieldOrPropertyWithValue("unit", (String) null);
@@ -320,6 +320,23 @@ public class ControlledKnobBuilderTest {
             .containsKey("color");
         assertThat(builder.properties.get("color"))
             .isExactlyInstanceOf(Color.class)
+            .isEqualTo(value);
+
+    }
+
+    /**
+     * Test of controller method, of class KnobBuilder.
+     */
+    @Test
+    public void testController() {
+
+        String value = "Some Controller";
+        ControlledKnobBuilder builder = ControlledKnobBuilder.create().controller(value);
+
+        assertThat(builder.properties)
+            .containsKey("controller");
+        assertThat(builder.properties.get("controller"))
+            .isExactlyInstanceOf(String.class)
             .isEqualTo(value);
 
     }
@@ -951,23 +968,6 @@ public class ControlledKnobBuilderTest {
             .containsKey("tagColor");
         assertThat(builder.properties.get("tagColor"))
             .isExactlyInstanceOf(Color.class)
-            .isEqualTo(value);
-
-    }
-
-    /**
-     * Test of tagVisible method, of class KnobBuilder.
-     */
-    @Test
-    public void testTagVisible() {
-
-        boolean value = true;
-        ControlledKnobBuilder builder = ControlledKnobBuilder.create().tagVisible(value);
-
-        assertThat(builder.properties)
-            .containsKey("tagVisible");
-        assertThat(builder.properties.get("tagVisible"))
-            .isExactlyInstanceOf(Boolean.class)
             .isEqualTo(value);
 
     }

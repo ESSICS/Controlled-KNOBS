@@ -21,9 +21,14 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.scene.paint.Color;
 import se.ess.knobs.Knob;
 import se.ess.knobs.controller.Controllable;
 import se.ess.knobs.controller.Controllers;
@@ -37,7 +42,10 @@ import static se.ess.knobs.controller.Controllable.OperatingMode.CONTINUOUS;
  */
 @SuppressWarnings( "ClassWithoutLogger" )
 public class ControlledKnob extends Knob implements Controllable {
-    
+
+    public static final String CONTROLLER_NONE = "NONE";
+    public static final Color DEFAULT_CURRENT_VALUE_COLOR = Color.WHITE.deriveColor(0, 1, 1, 0.75);
+
     public ControlledKnob() {
         init();
     }
@@ -76,6 +84,46 @@ public class ControlledKnob extends Knob implements Controllable {
 
     public void setCoarseIncrement( double coarseIncrement ) {
         this.coarseIncrement.set(coarseIncrement);
+    }
+
+    /*
+     * ---- controller ---------------------------------------------------------
+     */
+    private final StringProperty controller = new SimpleStringProperty(this, "controller", CONTROLLER_NONE) {
+        @Override
+        protected void invalidated() {
+
+            String val = get();
+
+            if ( val == null || !Controllers.get().getIdentifiers().contains(val) ) {
+                set(CONTROLLER_NONE);
+            }
+
+        }
+
+    };
+    private final ChangeListener<? super String> controllerListener = ( observable, oldValue, newValue ) -> {
+
+        if ( !CONTROLLER_NONE.equals(oldValue) ) {
+            Controllers.get().getController(oldValue).remove(this);
+        }
+
+        if ( !CONTROLLER_NONE.equals(newValue) ) {
+            Controllers.get().getController(newValue).add(this);
+        }
+
+    };
+
+    public StringProperty controllerProperty() {
+        return controller;
+    }
+
+    public String getController() {
+        return controller.get();
+    }
+
+    public void setController( String controller ) {
+        this.controller.set(controller);
     }
 
     /*
@@ -125,16 +173,56 @@ public class ControlledKnob extends Knob implements Controllable {
         return operatingMode.get();
     }
 
-    public void setOperatingMode ( OperatingMode operatingMode ) {
+    public void setOperatingMode( OperatingMode operatingMode ) {
         this.operatingMode.set(operatingMode);
+    }
+
+    @Override
+    @SuppressWarnings( "FinalizeDeclaration" )
+    protected void finalize() throws Throwable {
+
+        String c = getController();
+
+        if ( !CONTROLLER_NONE.equals(c) ) {
+            Controllers.get().getController(c).remove(this);
+        }
+
+        super.finalize();
+
+    }
+
+    /*
+     * ---- tagVisible ---------------------------------------------------------
+     */
+    private BooleanProperty roTagVisible = null;
+
+    @Override
+    public BooleanProperty tagVisibleProperty() {
+
+        if ( roTagVisible == null ) {
+
+            roTagVisible = new ReadOnlyBooleanWrapper(this, "tagVisible");
+
+            roTagVisible.bind(super.tagVisibleProperty());
+
+        }
+
+        return roTagVisible;
+
+    }
+
+    @Override
+    public void setTagVisible( boolean tagVisible ) {
+        throw new UnsupportedOperationException();
     }
 
     /*
      * -------------------------------------------------------------------------
      */
     private void init() {
-        setTagVisible(true);
-        Controllers.get().getControllers().iterator().next().add(this);
+        super.setTagVisible(true);
+        super.setCurrentValueColor(DEFAULT_CURRENT_VALUE_COLOR);
+        controllerProperty().addListener(controllerListener);
     }
 
 }

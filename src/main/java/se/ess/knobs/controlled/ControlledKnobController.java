@@ -50,8 +50,8 @@ import javafx.scene.paint.Color;
 import org.controlsfx.control.PropertySheet;
 import org.controlsfx.property.BeanProperty;
 import se.ess.knobs.Knob;
-import se.ess.knobs.KnobPropertyEditorFactory;
 import se.ess.knobs.controller.Controllers;
+import se.ess.knobs.controller.midi.djtechtools.MidiFighterTwisterController;
 
 
 /**
@@ -70,7 +70,7 @@ public class ControlledKnobController implements Initializable {
     private int selectedKnob = -1;
     private final Color[] tags = { Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW };
     private final ScheduledExecutorService timer = Executors.newSingleThreadScheduledExecutor();
-    private volatile boolean[] updateCurrentValue = { false, false, false, false };
+    private final boolean[] updateCurrentValue = { false, false, false, false };
     @FXML private Label windowFocusStatus;
 
     public ControlledKnobController() {
@@ -88,7 +88,7 @@ public class ControlledKnobController implements Initializable {
         //  Get the MIDI device.
         Controllers.get();
 
-        propertySheet.setPropertyEditorFactory(new KnobPropertyEditorFactory());
+        propertySheet.setPropertyEditorFactory(new ControlledKnobPropertyEditorFactory());
 
         ControlledKnob[] knobs = new ControlledKnob[4];
         
@@ -99,7 +99,8 @@ public class ControlledKnobController implements Initializable {
             final int index = i;
 
             knobs[index] = ControlledKnobBuilder.create()
-                .channel(index)
+                .channel(index < 2 ? index : 2 + index)
+                .controller(MidiFighterTwisterController.IDENTIFIER)
                 .tagColor(tags[index])
                 .onAdjusted(e -> LOGGER.info(MessageFormat.format("Current value [{0}] reached target: {1}", index, ((Knob) e.getSource()).getCurrentValue())))
                 .onTargetSet(e -> {
@@ -119,7 +120,7 @@ public class ControlledKnobController implements Initializable {
 
                 for ( PropertyDescriptor p : propertyDescriptors ) {
                     try {
-                        if ( p.getReadMethod() != null && p.getWriteMethod() != null ) {
+                        if ( p.getReadMethod() != null && p.getWriteMethod() != null && !"tagVisible".equals(p.getName() )) {
                             p.setValue(BeanProperty.CATEGORY_LABEL_KEY, categories.get(p.getReadMethod().getDeclaringClass()));
                             pList.add(new BeanProperty(knobs[index], p));
                         }
@@ -174,8 +175,8 @@ public class ControlledKnobController implements Initializable {
                     }
 
                 }},
-                5000,
-                200,
+                2000,
+                50,
                 TimeUnit.MILLISECONDS
             );
 

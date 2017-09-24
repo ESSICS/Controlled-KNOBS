@@ -26,6 +26,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import se.ess.knobs.controller.Controllers;
 
+import static javafx.application.Application.launch;
+
 
 /**
  * @author Claudio Rosati, European Spallation Source ERIC

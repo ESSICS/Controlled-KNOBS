@@ -211,11 +211,6 @@ public class ControlledKnob extends Knob implements Controllable {
 
     }
 
-    @Override
-    public void setTagVisible( boolean tagVisible ) {
-        throw new UnsupportedOperationException();
-    }
-
     /*
      * -------------------------------------------------------------------------
      */

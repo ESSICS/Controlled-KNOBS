@@ -32,6 +32,7 @@ import javafx.scene.paint.Color;
 import se.ess.knobs.Knob;
 import se.ess.knobs.controller.Controllable;
 import se.ess.knobs.controller.Controllers;
+import se.ess.knobs.controller.spi.Controller;
 
 import static se.ess.knobs.controller.Controllable.OperatingMode.CONTINUOUS;
 
@@ -177,20 +178,6 @@ public class ControlledKnob extends Knob implements Controllable {
         this.operatingMode.set(operatingMode);
     }
 
-    @Override
-    @SuppressWarnings( "FinalizeDeclaration" )
-    protected void finalize() throws Throwable {
-
-        String c = getController();
-
-        if ( !CONTROLLER_NONE.equals(c) ) {
-            Controllers.get().getController(c).remove(this);
-        }
-
-        super.finalize();
-
-    }
-
     /*
      * ---- tagVisible ---------------------------------------------------------
      */
@@ -214,6 +201,28 @@ public class ControlledKnob extends Knob implements Controllable {
     /*
      * -------------------------------------------------------------------------
      */
+    public void dispose() {
+
+        String c = getController();
+
+        if ( !CONTROLLER_NONE.equals(c) ) {
+
+            Controller cntrl = Controllers.get().getController(c);
+            if ( cntrl != null ) {
+                cntrl.remove(this);
+            }
+
+        }
+
+    }
+
+    @Override
+    @SuppressWarnings( "FinalizeDeclaration" )
+    protected void finalize() throws Throwable {
+        dispose();
+        super.finalize();
+    }
+
     private void init() {
         super.setTagVisible(true);
         super.setCurrentValueColor(DEFAULT_CURRENT_VALUE_COLOR);

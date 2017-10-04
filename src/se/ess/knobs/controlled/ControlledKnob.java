@@ -17,6 +17,8 @@
 package se.ess.knobs.controlled;
 
 
+import java.util.HashMap;
+import java.util.Map;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -28,6 +30,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import se.ess.knobs.Knob;
 import se.ess.knobs.controller.Controllable;
@@ -46,6 +49,8 @@ public class ControlledKnob extends Knob implements Controllable {
 
     public static final String CONTROLLER_NONE = "NONE";
     public static final Color DEFAULT_CURRENT_VALUE_COLOR = Color.WHITE.deriveColor(0, 1, 1, 0.95);
+
+    private final Map<Controllable.OperatingMode, Image> omImages = new HashMap<>(Controllable.OperatingMode.values().length);
 
     public ControlledKnob() {
         init();
@@ -222,6 +227,16 @@ public class ControlledKnob extends Knob implements Controllable {
         dispose();
         super.finalize();
     }
+
+//    @Override
+//    protected void initComponents() {
+//        super.resize();
+//    }
+
+//    @Override
+//    protected void resize() {
+//        super.resize();
+//    }
 
     private void init() {
         super.setTagVisible(true);

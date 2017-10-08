@@ -83,9 +83,6 @@ public class ControlledKnobBuilder {
         if ( properties.containsKey("color") ) {
             knob.setColor((Color) properties.get("color"));
         }
-        if ( properties.containsKey("currentValueAlwaysVisible") ) {
-            knob.setCurrentValueAlwaysVisible((boolean) properties.get("currentValueAlwaysVisible"));
-        }
         if ( properties.containsKey("currentValueColor") ) {
             knob.setCurrentValueColor((Color) properties.get("currentValueColor"));
         }
@@ -191,6 +188,9 @@ public class ControlledKnobBuilder {
         if ( properties.containsKey("targetValue") ) {
             knob.setTargetValue((double) properties.get("targetValue"));
         }
+        if ( properties.containsKey("targetValueAlwaysVisible") ) {
+            knob.setTargetValueAlwaysVisible((boolean) properties.get("targetValueAlwaysVisible"));
+        }
         if ( properties.containsKey("textColor") ) {
             knob.setTextColor((Color) properties.get("textColor"));
         }
@@ -248,14 +248,6 @@ public class ControlledKnobBuilder {
     public final ControlledKnobBuilder currentValue( final double value ) {
 
         properties.put("currentValue", value);
-
-        return this;
-
-    }
-
-    public final ControlledKnobBuilder currentValueAlwaysVisible( final boolean value ) {
-
-        properties.put("currentValueAlwaysVisible", value);
 
         return this;
 
@@ -532,6 +524,14 @@ public class ControlledKnobBuilder {
     public final ControlledKnobBuilder targetValue( final double value ) {
 
         properties.put("targetValue", value);
+
+        return this;
+
+    }
+
+    public final ControlledKnobBuilder targetValueAlwaysVisible( final boolean value ) {
+
+        properties.put("targetValueAlwaysVisible", value);
 
         return this;
 

@@ -17,8 +17,6 @@
 package se.ess.knobs.controlled;
 
 
-import java.util.HashMap;
-import java.util.Map;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -30,7 +28,9 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import se.ess.knobs.Knob;
 import se.ess.knobs.controller.Controllable;
@@ -50,7 +50,11 @@ public class ControlledKnob extends Knob implements Controllable {
     public static final String CONTROLLER_NONE = "NONE";
     public static final Color DEFAULT_CURRENT_VALUE_COLOR = Color.WHITE.deriveColor(0, 1, 1, 0.95);
 
-    private final Map<Controllable.OperatingMode, Image> omImages = new HashMap<>(Controllable.OperatingMode.values().length);
+    private static final Image IMG_CLIC_SET_AND_RELEASE = new Image(ControlledKnob.class.getResource("images/CLIC_SET_AND_RELEASE.png").toExternalForm());
+    private static final Image IMG_CONTINUOUS = new Image(ControlledKnob.class.getResource("images/CONTINUOUS.png").toExternalForm());
+    private static final Image IMG_SET_AND_CLICK = new Image(ControlledKnob.class.getResource("images/SET_AND_CLICK.png").toExternalForm());
+
+    private ImageView operatinModeView;
 
     public ControlledKnob() {
         init();
@@ -164,9 +168,23 @@ public class ControlledKnob extends Knob implements Controllable {
     private final ObjectProperty<OperatingMode> operatingMode = new SimpleObjectProperty<OperatingMode>(this, "operatingMode", CONTINUOUS) {
         @Override
         protected void invalidated() {
+
             if ( get() == null ) {
                 set(CONTINUOUS);
             }
+
+            switch ( get() ) {
+                case CLIC_SET_AND_RELEASE:
+                    operatinModeView.setImage(IMG_CLIC_SET_AND_RELEASE);
+                    break;
+                case CONTINUOUS:
+                    operatinModeView.setImage(IMG_CONTINUOUS);
+                    break;
+                case SET_AND_CLICK:
+                    operatinModeView.setImage(IMG_SET_AND_CLICK);
+                    break;
+            }
+
         }
     };
 
@@ -228,15 +246,43 @@ public class ControlledKnob extends Knob implements Controllable {
         super.finalize();
     }
 
-//    @Override
-//    protected void initComponents() {
-//        super.resize();
-//    }
+    @Override
+    protected void initComponents() {
 
-//    @Override
-//    protected void resize() {
-//        super.resize();
-//    }
+        super.initComponents();
+
+        operatinModeView = new ImageView();
+
+        operatinModeView.setImage(IMG_CONTINUOUS);
+        operatinModeView.setBlendMode(BlendMode.MULTIPLY);
+        operatinModeView.setSmooth(true);
+
+        pane.getChildren().add(operatinModeView);
+
+    }
+
+    @Override
+    protected void resize() {
+        
+        super.resize();
+
+        double width  = getWidth() - getInsets().getLeft() - getInsets().getRight();
+        double height = getHeight() - getInsets().getTop() - getInsets().getBottom();
+
+        size = width < height ? width : height;
+
+        if ( size > 0 ) {
+
+            double imgSize = size / 11;
+
+            operatinModeView.setFitWidth(imgSize);
+            operatinModeView.setFitHeight(imgSize);
+
+            operatinModeView.relocate(( size - imgSize) * 0.5, size * 0.815);
+
+        }
+
+    }
 
     private void init() {
         super.setTagVisible(true);

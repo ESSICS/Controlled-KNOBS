@@ -66,7 +66,13 @@ public class Controllers {
                     }
 
                     LOGGER.info(MessageFormat.format("Resetting controller \"{0}\"…", id));
-                    c.reset();
+
+                    if ( !c.reset() ) {
+                        LOGGER.warning(MessageFormat.format("Resetting controller \"{0}\" failed!", id));
+                    } else {
+                        LOGGER.info(MessageFormat.format("Successful reset of controller \"{0}\"!", id));
+                    }
+
 
                 }
 

@@ -46,16 +46,24 @@ public class MidiFighterTwisterController extends AbstractMIDIController {
     }
 
     @Override
-    public void reset() {
+    public boolean reset() {
 
-        super.reset();
+        if ( !super.reset() ) {
+            return false;
+        }
 
         for ( int c = 0; c < CHANNELS; c++ ) {
             for ( int v = 127; v >= 0; v-- ) {
-                send(ShortMessage.CONTROL_CHANGE, 0, c, v, -1);
-                send(ShortMessage.CONTROL_CHANGE, 1, c, v, -1);
+                if ( !send(ShortMessage.CONTROL_CHANGE, 0, c, v, -1) ) {
+                    return false;
+                }
+                if ( !send(ShortMessage.CONTROL_CHANGE, 1, c, v, -1) ) {
+                    return false;
+                }
             }
         }
+
+        return true;
 
     }
 

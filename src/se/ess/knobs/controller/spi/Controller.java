@@ -56,7 +56,9 @@ public interface Controller {
 
     /**
      * Put the controller in its initial, well-known state.
+     * 
+     * @return {@code true} on success.
      */
-    public void reset();
+    public boolean reset();
 
 }

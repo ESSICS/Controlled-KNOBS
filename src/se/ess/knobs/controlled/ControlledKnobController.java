@@ -182,10 +182,6 @@ public class ControlledKnobController implements Initializable {
 
         }
 
-        knobs[1].setColor(Color.DARKRED);
-        knobs[2].setColor(Color.GOLDENROD);
-        knobs[3].setColor(Color.DARKBLUE);
-
         long afterTime = System.currentTimeMillis();
 
         LOGGER.log(Level.INFO, "Construction time: {0,number,#########0}ms", afterTime - beforeTime);

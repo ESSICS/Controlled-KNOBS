@@ -77,10 +77,12 @@ public abstract class AbstractMIDIController extends AbstractController {
 
     /**
      * Default implementation sending MIDI System Reset message to the device.
+     * 
+     * @return {@code true} on success.
      */
     @Override
-    public void reset() {
-        send(ShortMessage.SYSTEM_RESET, -1);
+    public boolean reset() {
+        return send(ShortMessage.SYSTEM_RESET, -1);
     }
 
     @Override
@@ -93,20 +95,6 @@ public abstract class AbstractMIDIController extends AbstractController {
         }
     }
 
-//    /**
-//     * @return The MIDI device from which data is coming.
-//     */
-//    protected MidiDevice getFromDevice() {
-//        return fromDevice;
-//    }
-//
-//    /**
-//     * @return The MIDI device to which data must be sent.
-//     */
-//    protected MidiDevice getToDevice() {
-//        return toDevice;
-//    }
-//
     /**
      * Called when a new MIDI message is received from the {@link #fromDevice}.
      *
@@ -121,19 +109,25 @@ public abstract class AbstractMIDIController extends AbstractController {
      *
      * @param message   The MIDI message to be sent.
      * @param timeStamp The timestamp for the message, in microseconds.
+     * @return {@code true} on success.
      */
-    protected void send( MidiMessage message, long timeStamp ) {
+    protected boolean send( MidiMessage message, long timeStamp ) {
+        
         if ( toReceiver != null ) {
             toReceiver.send(message, timeStamp);
+            return true;
         } else if ( toDevice != null ) {
-            LOGGER.warning(MessageFormat.format(
+            LOGGER.fine(MessageFormat.format(
                 "MIDI message cannot be sent. Receiver not available for MIDI \"to\" device {0}. {2}",
                 toDevice.getClass().getName(),
                 deviceInfoForLogger(toDevice)
             ));
         } else {
-            LOGGER.warning("MIDI message cannot be sent. MIDI \"to\" device doesn't exist.");
+            LOGGER.fine("MIDI message cannot be sent. MIDI \"to\" device doesn't exist.");
         }
+
+        return false;
+
     }
 
     /**
@@ -142,14 +136,19 @@ public abstract class AbstractMIDIController extends AbstractController {
      *
      * @param midiStatus The MIDI status byte.
      * @param timeStamp  The timestamp for the message, in microseconds.
+     * @return {@code true} on success.
      * @see ShortMessage
      */
-    protected void send( int midiStatus, long timeStamp ) {
+    protected boolean send( int midiStatus, long timeStamp ) {
+
         try {
-            send(new ShortMessage(midiStatus), timeStamp);
+            return send(new ShortMessage(midiStatus), timeStamp);
         } catch ( InvalidMidiDataException ex ) {
             LOGGER.log(Level.WARNING, "This exception should never happens.", ex);
         }
+
+        return false;
+
     }
 
     /**
@@ -160,14 +159,19 @@ public abstract class AbstractMIDIController extends AbstractController {
      * @param data1      The first data byte.
      * @param data2      The second data byte.
      * @param timeStamp  The timestamp for the message, in microseconds.
+     * @return {@code true} on success.
      * @see ShortMessage
      */
-    protected void send( int midiStatus, int data1, int data2, long timeStamp ) {
+    protected boolean send( int midiStatus, int data1, int data2, long timeStamp ) {
+
         try {
-            send(new ShortMessage(midiStatus, data1, data2), timeStamp);
+            return send(new ShortMessage(midiStatus, data1, data2), timeStamp);
         } catch ( InvalidMidiDataException ex ) {
             LOGGER.log(Level.WARNING, "This exception should never happens.", ex);
         }
+
+        return false;
+
     }
 
     /**
@@ -179,14 +183,19 @@ public abstract class AbstractMIDIController extends AbstractController {
      * @param data1       The first data byte.
      * @param data2       The second data byte.
      * @param timeStamp   The timestamp for the message, in microseconds.
+     * @return {@code true} on success.
      * @see ShortMessage
      */
-    protected void send( int midiCommand, int midiChannel, int data1, int data2, long timeStamp ) {
+    protected boolean send( int midiCommand, int midiChannel, int data1, int data2, long timeStamp ) {
+
         try {
-            send(new ShortMessage(midiCommand, midiChannel, data1, data2), timeStamp);
+            return send(new ShortMessage(midiCommand, midiChannel, data1, data2), timeStamp);
         } catch ( InvalidMidiDataException ex ) {
             LOGGER.log(Level.WARNING, "This exception should never happens.", ex);
         }
+
+        return false;
+
     }
 
     private void closeDevices() {
@@ -242,14 +251,14 @@ public abstract class AbstractMIDIController extends AbstractController {
                         } else if ( toDevice == null && device.getMaxReceivers() != 0 ) {
                             toDevice = device;
                         } else if ( fromDevice != null || toDevice != null ) {
-                            LOGGER.warning(MessageFormat.format(
+                            LOGGER.fine(MessageFormat.format(
                                 "Device \"{0}\" already found, the following is skipped [{1}] {2}",
                                 identifier,
                                 info.getClass().getName(),
                                 deviceInfoForLogger(info)
                             ));
                         } else {
-                            LOGGER.warning(MessageFormat.format(
+                            LOGGER.fine(MessageFormat.format(
                                 "Device \"{0}\" has no transmitters nor receivers [{1}] {2}",
                                 identifier,
                                 info.getClass().getName(),
@@ -257,7 +266,7 @@ public abstract class AbstractMIDIController extends AbstractController {
                             ));
                         }
                     } else {
-                        LOGGER.warning(MessageFormat.format(
+                        LOGGER.fine(MessageFormat.format(
                             "Device \"{0}\" is not a MIDI port [{1}] {2}",
                             identifier,
                             info.getClass().getName(),
@@ -266,7 +275,7 @@ public abstract class AbstractMIDIController extends AbstractController {
                     }
 
                 } catch ( MidiUnavailableException ex ) {
-                    LOGGER.warning(MessageFormat.format(
+                    LOGGER.fine(MessageFormat.format(
                         "MIDI device {0} is unavailable [{1}] {2}",
                         info.getClass().getName(),
                         ex.getMessage(),
@@ -297,7 +306,7 @@ public abstract class AbstractMIDIController extends AbstractController {
                     });
 
                 } catch ( MidiUnavailableException ex ) {
-                    LOGGER.warning(MessageFormat.format(
+                    LOGGER.fine(MessageFormat.format(
                         "Transmitter not available for MIDI \"from\" device {0} [{1}] {2}",
                         fromDevice.getClass().getName(),
                         ex.getMessage(),
@@ -306,7 +315,7 @@ public abstract class AbstractMIDIController extends AbstractController {
                 }
 
             } catch ( MidiUnavailableException ex ) {
-                LOGGER.warning(MessageFormat.format(
+                LOGGER.fine(MessageFormat.format(
                     "MIDI \"from\" device {0} cannot be opened [{1}] {2}",
                     fromDevice.getClass().getName(),
                     ex.getMessage(),
@@ -314,7 +323,7 @@ public abstract class AbstractMIDIController extends AbstractController {
                 ));
             }
         } else {
-            LOGGER.warning("MIDI \"from\" device doesn't exist.");
+            LOGGER.fine("MIDI \"from\" device doesn't exist.");
         }
 
         if ( toDevice != null ) {
@@ -325,7 +334,7 @@ public abstract class AbstractMIDIController extends AbstractController {
                 try {
                     toReceiver = toDevice.getReceiver();
                 } catch ( MidiUnavailableException ex ) {
-                    LOGGER.warning(MessageFormat.format(
+                    LOGGER.fine(MessageFormat.format(
                         "Receiver not available for MIDI \"to\" device {0} [{1}] {2}",
                         toDevice.getClass().getName(),
                         ex.getMessage(),
@@ -334,7 +343,7 @@ public abstract class AbstractMIDIController extends AbstractController {
                 }
 
             } catch ( MidiUnavailableException ex ) {
-                LOGGER.warning(MessageFormat.format(
+                LOGGER.fine(MessageFormat.format(
                     "MIDI \"to\" device {0} cannot be opened [{1}] {2}",
                     toDevice.getClass().getName(),
                     ex.getMessage(),
@@ -342,7 +351,7 @@ public abstract class AbstractMIDIController extends AbstractController {
                 ));
             }
         } else {
-            LOGGER.warning("MIDI \"to\" device doesn't exist.");
+            LOGGER.fine("MIDI \"to\" device doesn't exist.");
         }
 
     }

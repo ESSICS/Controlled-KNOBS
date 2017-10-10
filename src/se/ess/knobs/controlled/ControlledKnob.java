@@ -54,7 +54,7 @@ public class ControlledKnob extends Knob implements Controllable {
     private static final Image IMG_CONTINUOUS = new Image(ControlledKnob.class.getResource("images/CONTINUOUS.png").toExternalForm());
     private static final Image IMG_SET_AND_CLICK = new Image(ControlledKnob.class.getResource("images/SET_AND_CLICK.png").toExternalForm());
 
-    private ImageView operatinModeView;
+    private final ImageView operatinModeView = new ImageView();
 
     public ControlledKnob() {
         init();
@@ -251,9 +251,18 @@ public class ControlledKnob extends Knob implements Controllable {
 
         super.initComponents();
 
-        operatinModeView = new ImageView();
+        switch ( getOperatingMode() ) {
+            case CLIC_SET_AND_RELEASE:
+                operatinModeView.setImage(IMG_CLIC_SET_AND_RELEASE);
+                break;
+            case CONTINUOUS:
+                operatinModeView.setImage(IMG_CONTINUOUS);
+                break;
+            case SET_AND_CLICK:
+                operatinModeView.setImage(IMG_SET_AND_CLICK);
+                break;
+        }
 
-        operatinModeView.setImage(IMG_CONTINUOUS);
         operatinModeView.setBlendMode(BlendMode.MULTIPLY);
         operatinModeView.setSmooth(true);
 

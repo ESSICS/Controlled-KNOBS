@@ -1,6 +1,7 @@
 # Controlled-KNOBS
 A MIDI controlled version of [KNOBS](https://github.com/ESSICS/KNOBS).
 
+![ControlledKnobEvaluator1](https://github.com/ESSICS/Controlled-KNOBS/blob/master/doc/architecture.png)
 ![ControlledKnobEvaluator1](https://github.com/ESSICS/Controlled-KNOBS/blob/master/doc/ControlledKnobEvaluator1.png)
 ![ControlledKnobEvaluator2](https://github.com/ESSICS/Controlled-KNOBS/blob/master/doc/ControlledKnobEvaluator2.jpg)
 

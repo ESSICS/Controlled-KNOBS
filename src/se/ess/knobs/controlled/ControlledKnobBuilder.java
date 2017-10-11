@@ -203,6 +203,9 @@ public class ControlledKnobBuilder {
         if ( properties.containsKey("unit") ) {
             knob.setUnit((String) properties.get("unit"));
         }
+        if ( properties.containsKey("zeroDetentEnabled") ) {
+            knob.setZeroDetentEnabled((boolean) properties.get("zeroDetentEnabled"));
+        }
 
         //  The following must be the last one(s).
         if ( properties.containsKey("controller") ) {
@@ -564,6 +567,14 @@ public class ControlledKnobBuilder {
     public final ControlledKnobBuilder unit( final String unit ) {
 
         properties.put("unit", unit);
+
+        return this;
+
+    }
+
+    public final ControlledKnobBuilder zeroDetentEnabled( final boolean value ) {
+
+        properties.put("zeroDetentEnabled", value);
 
         return this;
 

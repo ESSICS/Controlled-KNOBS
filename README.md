@@ -2,6 +2,8 @@
 
 A MIDI controlled version of [KNOBS](https://github.com/ESSICS/KNOBS).
 
+[![Maven Central](https://img.shields.io/maven-central/v/se.europeanspallationsource/javafx.control.controlled-knobs.svg)]()
+
 ![ControlledKnobEvaluator1](https://github.com/ESSICS/Controlled-KNOBS/blob/master/doc/architecture.png)
 ![ControlledKnobEvaluator1](https://github.com/ESSICS/Controlled-KNOBS/blob/master/doc/ControlledKnobEvaluator1.png)
 ![ControlledKnobEvaluator2](https://github.com/ESSICS/Controlled-KNOBS/blob/master/doc/ControlledKnobEvaluator2.jpg)

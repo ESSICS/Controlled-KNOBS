@@ -1,8 +1,9 @@
 # Controlled-KNOBS
 
-A MIDI controlled version of [KNOBS](https://github.com/ESSICS/KNOBS).
-
 [![Maven Central](https://img.shields.io/maven-central/v/se.europeanspallationsource/javafx.control.controlled-knobs.svg)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22se.europeanspallationsource%22)
+[![javadoc](https://www.javadoc.io/badge/se.europeanspallationsource/javafx.control.controlled-knobs.svg?color=orange)](https://www.javadoc.io/doc/se.europeanspallationsource/javafx.control.controlled-knobs)
+
+A MIDI controlled version of [KNOBS](https://github.com/ESSICS/KNOBS).
 
 ![ControlledKnobEvaluator1](https://github.com/ESSICS/Controlled-KNOBS/blob/master/doc/architecture.png)
 ![ControlledKnobEvaluator1](https://github.com/ESSICS/Controlled-KNOBS/blob/master/doc/ControlledKnobEvaluator1.png)

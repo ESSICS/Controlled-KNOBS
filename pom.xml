@@ -5,7 +5,7 @@
 
     <groupId>se.europeanspallationsource</groupId>
     <artifactId>javafx.control.controlled-knobs</artifactId>
-    <version>1.0.5</version>
+    <version>1.0.6</version>
     <packaging>jar</packaging>
     <name>Controlled-KNOBS</name>
     <description>
@@ -128,7 +128,7 @@
         <dependency>
             <groupId>se.europeanspallationsource</groupId>
             <artifactId>javafx.control.knobs</artifactId>
-            <version>1.0.12</version>
+            <version>1.0.13</version>
             <scope>compile</scope>
         </dependency>
 
